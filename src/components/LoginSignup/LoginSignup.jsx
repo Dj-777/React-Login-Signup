@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import "./LoginSignup.css";
-import userIcon from "../Assets/person.png";
-import userEmail from "../Assets/email.png";
-import userPassword from "../Assets/password.png";
+import React, { useEffect, useState } from 'react'
+import axios from "axios"
+import './LoginSignup.css'
+import userIcon from '../Assets/person.png'
+import userEmail from  '../Assets/email.png'
+import userPassword from "../Assets/password.png"
 const LoginSignup = () => {
   const [action, setAction] = useState("Sign Up");
   const [name, setName] = useState(null);
@@ -11,6 +12,12 @@ const LoginSignup = () => {
   const [confirmPassword, setConfirmPassword] = useState(null);
   let [errMessage, setErrMessage] = useState(null);
   let [successMessage, setSuccessMessage] = useState(null);
+  // const [action,setAction]=useState("Sign Up");
+  // const [name, setName] = useState(null);
+  // const [email, setEmail] = useState(null);
+  // const [password,setPassword] = useState(null);
+  // const [conformpassword,setConformPassword] = useState(null);
+  const [error,setError]=useState(null);
 
   useEffect(() => {
     console.log(!password, !confirmPassword);
@@ -24,7 +31,7 @@ const LoginSignup = () => {
       setErrMessage(null);
     }
   }, [password, confirmPassword]);
-  const handleInputChange = (e) => {
+  const handelInputForUser = (e) => {
     const { id, value } = e.target;
     if (id === "name") {
       setName(value);
@@ -39,7 +46,7 @@ const LoginSignup = () => {
       setConfirmPassword(value);
     }
   };
-  const handleSubmitChange = (name, email, password) => {
+  const handleSubmitChange = (name, email, password,confirmPassword) => {
     console.log(name, email, password, "e");
     let getUserData = JSON.parse(localStorage.getItem("User"));
     console.log(getUserData);
@@ -60,6 +67,9 @@ const LoginSignup = () => {
           setSuccessMessage(
             "Congratulations, you have successfully registered"
           );
+          axios.post("http://localhost:3000/user/users",{
+            data: ({name,email,password,confirmPassword}),
+        })
           setTimeout(() => {
             setAction("Login");
             setErrMessage(null);
@@ -106,68 +116,73 @@ const LoginSignup = () => {
         {action === "Login" ? (
           <div></div>
         ) : (
-          <div className="input">
+          <div>
+            <div className='input'>
+            
             <img src={userIcon} alt="" />
             <input
               type="text"
               placeholder="Enter Name"
-              onChange={(e) => handleInputChange(e)}
+              onChange={(e) => handelInputForUser(e)}
               id="name"
               value={name}
+              
             />
+           </div>
+          
+          <div className='inputConfromPAss'>
+
+                <img src={userPassword} alt="" />
+                <input type="password" 
+                placeholder='Enter conform-Password' 
+                onChange={(data)=>handelInputForUser(data)} value={confirmPassword} 
+                id="conformpassword" />
+          </div>
+
           </div>
         )}
-
-        <div className="input">
-          <img src={userEmail} alt="" />
-          <input
-            type="email"
-            placeholder="Enter Email Id"
-            onChange={(e) => handleInputChange(e)}
-            id="email"
-            value={email}
-          />
-        </div>
-        <div className="input">
-          <img src={userPassword} alt="" />
-          <input
-            type="password"
-            placeholder="Enter Password"
-            onChange={(e) => handleInputChange(e)}
-            id="password"
-            value={password}
-          />
-        </div>
-        {action === "Sign Up" && (
+           <div className="input">
+                <img src={userEmail} alt="" />
+                <input type="email" placeholder='Enter Email Id' onChange={(data)=>handelInputForUser(data)} value={email} id="email" />
+            </div>
+            <div className="input">
+                <img src={userPassword} alt="" />
+                <input type="password" placeholder='Enter Password' onChange={(data)=>handelInputForUser(data)} value={password} id="password" />
+            </div>
+            
+            {error === null ? <div></div> : <span className='passwordError'>{error}</span>}
+        
+     
+        {/* {action === "Sign Up" && (
           <div className="input">
             <img src={userPassword} alt="" />
             <input
               type="confirmPassword"
               placeholder="Enter ConfirmPassword Password"
-              onChange={(e) => handleInputChange(e)}
+              onChange={(e) => handelInputForUser(e)}
               id="confirmPassword"
               value={confirmPassword}
             />
           </div>
-        )}
-        <span className="errMessage">{errMessage}</span>
-        {successMessage !== null && (
-          <span className="successMessage">{successMessage}</span>
-        )}
-      </div>
+        )}  */}
+    
       {action === "Sign Up" ? (
-        <div></div>
+       <div></div>
       ) : (
         <div className="forgot-password">
           Lost Password? <span>Click Here!</span>
         </div>
+      )}
+      <span className="errMessage">{errMessage}</span>
+      {successMessage !== null && (
+        <span className="successMessage">{successMessage}</span>
       )}
       <div className="submit-container">
         <div
           className={action === "Login" ? "submit gray" : "submit"}
           onClick={() => {
             setAction("Sign Up");
-            handleSubmitChange(name, email, password);
+            handleSubmitChange(name, email, password,confirmPassword);
           }}
         >
           Sign Up
@@ -183,7 +198,11 @@ const LoginSignup = () => {
         </div>
       </div>
     </div>
-  );
-};
+    </div>
+
+    
+
+  )
+}
 
 export default LoginSignup;
