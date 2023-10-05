@@ -17,7 +17,7 @@ const LoginSignup = () => {
   // const [email, setEmail] = useState(null);
   // const [password,setPassword] = useState(null);
   // const [conformpassword,setConformPassword] = useState(null);
-  const [error,setError]=useState(null);
+  // const [error,setError]=useState(null);
 
   useEffect(() => {
     console.log(!password, !confirmPassword);
@@ -46,66 +46,90 @@ const LoginSignup = () => {
       setConfirmPassword(value);
     }
   };
-  const handleSubmitChange = (name, email, password,confirmPassword) => {
+ 
+  const  handleSubmitChange = (name, email, password,confirmPassword) => {
     console.log(name, email, password, "e");
-    let getUserData = JSON.parse(localStorage.getItem("User"));
-    console.log(getUserData);
-    if (getUserData !== null) {
-      getUserData?.map((e) => {
-        console.log("Inisde Map");
-        if (e?.email === email) {
-          setErrMessage(
-            "Email is already registered please use Another Email!"
-          );
-        } else {
-          let id = Math.floor(Math.random() * 4000);
-          let userData = [
-            ...getUserData,
-            { name: name, email: email, password: password, id: id },
-          ];
-          localStorage.setItem("User", JSON.stringify(userData));
-          setSuccessMessage(
-            "Congratulations, you have successfully registered"
-          );
-          axios.post("http://localhost:3000/user/users",{
+    // let getUserData = JSON.parse(localStorage.getItem("User"));
+    // console.log(getUserData);
+    // if (getUserData !== null) {
+    //   getUserData?.map((e) => {
+    //     console.log("Inisde Map");
+    //     if (e?.email === email) {
+    //       setErrMessage(
+    //         "Email is already registered please use Another Email!"
+    //       );
+    //     } else {
+    //       let id = Math.floor(Math.random() * 4000);
+          // let userData = [
+          //   ...getUserData,
+          //   { name: name, email: email, password: password, id: id },
+          // ];
+          // localStorage.setItem("User", JSON.stringify(userData));
+        
+           axios.post("http://localhost:3000/user/users",{
             data: ({name,email,password,confirmPassword}),
-        })
-          setTimeout(() => {
-            setAction("Login");
-            setErrMessage(null);
-            setSuccessMessage(null);
-          }, 2000);
+          }).then((res)=>{
+            console.log(res.data.message,"res");
+           if( res.data.status === 1 ){
+             setSuccessMessage(
+               res.data.message
+             )
+             setTimeout(() => {
+               setAction("Login");
+              setErrMessage(null);
+              setSuccessMessage(null);
+            }, 2000);
+           } 
+            else if(res.data.status === 0) {
+              setErrMessage(res.data.message) 
+              setTimeout(() => {
+                // setAction("Login");
+               setErrMessage(null);
+               setSuccessMessage(null);
+             }, 2000);
+            } 
+          }).catch((error)=>{
+            console.log(error);
+            setErrMessage(
+              error.data.message
+            );
+          })
+         
         }
-      });
-    } else {
-      let id = Math.floor(Math.random() * 4000);
-      let userData = [{ name: name, email: email, password: password, id: id }];
-      localStorage.setItem("User", JSON.stringify(userData));
-      setSuccessMessage("Congratulations, you have successfully registered");
-    }
-  };
-  const handleLoginChange = (email, password) => {
-    let getUserData = JSON.parse(localStorage.getItem("User"));
-    getUserData?.map((e) => {
-      console.log("Inisde Map");
-      if (e?.email === email) {
-        if (e?.email === email && e?.password === password) {
-          let userData = [{ name: e.name, email: email, password: password }];
-          localStorage.setItem("LoginUser", JSON.stringify(userData));
-          setSuccessMessage("Congratulations, you have successfully Login");
-          setTimeout(() => {
-            setAction("Login");
-            setErrMessage(null);
-            setSuccessMessage(null);
-          }, 2000);
-        } else {
-          setErrMessage("Email and pasword doest not match");
-        }
-      } else {
-        setErrMessage("No Email Found please register first");
-      }
-    });
-  };
+      // });
+    // } else {
+      // let id = Math.floor(Math.random() * 4000);
+      // let userData = [{ name: name, email: email, password: password, id: id }];
+      // localStorage.setItem("User", JSON.stringify(userData));
+  //     setSuccessMessage("Congratulations, you have successfully registered");
+  //   }
+  // };
+
+  //This API Is for LOGIN for now i am commenting it...
+  // const handleLoginChange = (email, password) => {
+  //   let getUserData = JSON.parse(localStorage.getItem("User"));
+  //   getUserData?.map((e) => {
+  //     console.log("Inisde Map");
+  //     if (e?.email === email) {
+  //       if (e?.email === email && e?.password === password) {
+  //         let userData = [{ name: e.name, email: email, password: password }];
+  //         localStorage.setItem("LoginUser", JSON.stringify(userData));
+  //         setSuccessMessage("Congratulations, you have successfully Login");
+  //         setTimeout(() => {
+  //           setAction("Login");
+  //           setErrMessage(null);
+  //           setSuccessMessage(null);
+  //         }, 2000);
+  //       } else {
+  //         setErrMessage("Email and pasword doest not match");
+  //       }
+  //     } else {
+  //       setErrMessage("No Email Found please register first");
+  //     }
+  //   });
+  // };
+  //This API Is for LOGIN for now i am commenting it...
+
   return (
     <div className="container">
       <div className="header">
@@ -130,14 +154,14 @@ const LoginSignup = () => {
             />
            </div>
           
-          <div className='inputConfromPAss'>
+          {/* <div className='inputConfromPAss'>
 
                 <img src={userPassword} alt="" />
                 <input type="password" 
                 placeholder='Enter conform-Password' 
                 onChange={(data)=>handelInputForUser(data)} value={confirmPassword} 
                 id="conformpassword" />
-          </div>
+          </div> */}
 
           </div>
         )}
@@ -150,7 +174,7 @@ const LoginSignup = () => {
                 <input type="password" placeholder='Enter Password' onChange={(data)=>handelInputForUser(data)} value={password} id="password" />
             </div>
             
-            {error === null ? <div></div> : <span className='passwordError'>{error}</span>}
+            {/* {error === null ? <div></div> : <span className='passwordError'>{error}</span>} */}
         
      
         {/* {action === "Sign Up" && (
@@ -189,10 +213,11 @@ const LoginSignup = () => {
         </div>
         <div
           className={action === "Sign Up" ? "submit gray" : "submit"}
-          onClick={() => {
-            setAction("Login");
-            handleLoginChange(email, password);
-          }}
+          
+          // onClick={() => {
+          //   setAction("Login");
+          //   handleLoginChange(email, password);
+          // }}
         >
           Login
         </div>
