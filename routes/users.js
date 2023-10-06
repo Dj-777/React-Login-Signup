@@ -10,6 +10,6 @@ const userController = require("../controllers/users");
 // });
 
 router.post("/users",userController.Users);
-
+router.post("/userslogin",userController.UsersLogin);
 
 module.exports = router;
