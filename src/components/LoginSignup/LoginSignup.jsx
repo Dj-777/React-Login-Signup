@@ -12,12 +12,7 @@ const LoginSignup = () => {
   const [confirmPassword, setConfirmPassword] = useState(null);
   let [errMessage, setErrMessage] = useState(null);
   let [successMessage, setSuccessMessage] = useState(null);
-  // const [action,setAction]=useState("Sign Up");
-  // const [name, setName] = useState(null);
-  // const [email, setEmail] = useState(null);
-  // const [password,setPassword] = useState(null);
-  // const [conformpassword,setConformPassword] = useState(null);
-  // const [error,setError]=useState(null);
+
 
   useEffect(() => {
     console.log(!password, !confirmPassword);
@@ -49,23 +44,6 @@ const LoginSignup = () => {
 
   const handleSubmitChange = (name, email, password, confirmPassword) => {
     console.log(name, email, password, "e");
-    // let getUserData = JSON.parse(localStorage.getItem("User"));
-    // console.log(getUserData);
-    // if (getUserData !== null) {
-    //   getUserData?.map((e) => {
-    //     console.log("Inisde Map");
-    //     if (e?.email === email) {
-    //       setErrMessage(
-    //         "Email is already registered please use Another Email!"
-    //       );
-    //     } else {
-    //       let id = Math.floor(Math.random() * 4000);
-    // let userData = [
-    //   ...getUserData,
-    //   { name: name, email: email, password: password, id: id },
-    // ];
-    // localStorage.setItem("User", JSON.stringify(userData));
-
     axios
       .post("http://localhost:3000/user/users", {
         data: { name, email, password, confirmPassword },
@@ -78,14 +56,14 @@ const LoginSignup = () => {
             setAction("Login");
             setErrMessage(null);
             setSuccessMessage(null);
-          }, 2000);
+          }, 5000);
         } else if (res?.data?.status === 0) {
-          setErrMessage(res?.data?.message);
+          console.log("Inside elseif");
+           setErrMessage(res?.data?.message);
           setTimeout(() => {
-            // setAction("Login");
             setErrMessage(null);
             setSuccessMessage(null);
-          }, 2000);
+          }, 5000);
         }
       })
       .catch((error) => {
@@ -93,38 +71,53 @@ const LoginSignup = () => {
         setErrMessage(error?.data?.message);
       });
   };
-  // });
-  // } else {
-  // let id = Math.floor(Math.random() * 4000);
-  // let userData = [{ name: name, email: email, password: password, id: id }];
-  // localStorage.setItem("User", JSON.stringify(userData));
-  //     setSuccessMessage("Congratulations, you have successfully registered");
-  //   }
-  // };
+  
 
   //This API Is for LOGIN for now i am commenting it...
-  // const handleLoginChange = (email, password) => {
-  //   let getUserData = JSON.parse(localStorage.getItem("User"));
-  //   getUserData?.map((e) => {
-  //     console.log("Inisde Map");
-  //     if (e?.email === email) {
-  //       if (e?.email === email && e?.password === password) {
-  //         let userData = [{ name: e.name, email: email, password: password }];
-  //         localStorage.setItem("LoginUser", JSON.stringify(userData));
-  //         setSuccessMessage("Congratulations, you have successfully Login");
-  //         setTimeout(() => {
-  //           setAction("Login");
-  //           setErrMessage(null);
-  //           setSuccessMessage(null);
-  //         }, 2000);
-  //       } else {
-  //         setErrMessage("Email and pasword doest not match");
-  //       }
-  //     } else {
-  //       setErrMessage("No Email Found please register first");
-  //     }
-  //   });
-  // };
+  const handleLoginChange = (email, password) => {
+     
+      email === null ? email = null : email = email 
+      password === null ? password = null : password = password 
+      axios
+      .post("http://localhost:3000/user/userslogin", {
+        data: { email, password},
+      }).then((res)=>{
+        if(res?.data?.status === 0 ){
+          setErrMessage(res?.data?.message);
+          setTimeout(() => {
+            setErrMessage(null);
+            setSuccessMessage(null);
+          }, 5000);
+        }
+        else if(res?.data?.status === 1){
+          setSuccessMessage(res?.data?.message);
+          setTimeout(() => {
+            setErrMessage(null);
+            setSuccessMessage(null);
+          }, 5000);
+        }
+      })
+    // let getUserData = JSON.parse(localStorage.getItem("User"));
+    // getUserData?.map((e) => {
+    //   console.log("Inisde Map");
+    //   if (e?.email === email) {
+    //     if (e?.email === email && e?.password === password) {
+    //       let userData = [{ name: e.name, email: email, password: password }];
+    //       localStorage.setItem("LoginUser", JSON.stringify(userData));
+    //       setSuccessMessage("Congratulations, you have successfully Login");
+    //       setTimeout(() => {
+    //         setAction("Login");
+    //         setErrMessage(null);
+    //         setSuccessMessage(null);
+    //       }, 2000);
+    //     } else {
+    //       setErrMessage("Email and pasword doest not match");
+    //     }
+    //   } else {
+    //     setErrMessage("No Email Found please register first");
+    //   }
+    // });
+  };
   //This API Is for LOGIN for now i am commenting it...
 
   return (
@@ -148,16 +141,6 @@ const LoginSignup = () => {
                 value={name}
               />
             </div>
-            {/* <div className="inputConfromPAss">
-              <img src={userPassword} alt="" />
-              <input
-                type="password"
-                placeholder="Enter conform-Password"
-                onChange={(data) => handelInputForUser(data)}
-                value={confirmPassword}
-                id="conformpassword"
-              />
-            </div> */}
           </div>
         )}
         <div className="input">
@@ -221,7 +204,7 @@ const LoginSignup = () => {
             className={action === "Sign Up" ? "submit gray" : "submit"}
             onClick={() => {
               setAction("Login");
-              // handleLoginChange(email, password);
+               handleLoginChange(email, password);
             }}
           >
             Login

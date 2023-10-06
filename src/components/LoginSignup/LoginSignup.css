@@ -4,7 +4,7 @@
   margin: auto;
   width: 600px;
   background: white;
-  padding-bottom: 30px;
+  padding-bottom: 130px;
 }
 .header {
   display: flex;
@@ -91,7 +91,7 @@
 .submit-container {
   display: flex;
   gap: 30px;
-  margin: 60px auto;
+  margin: 1px auto;
 }
 
 .submit {
