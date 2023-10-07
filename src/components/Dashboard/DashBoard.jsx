@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./LoginSignup.css";
+import "./DashBoard.css";
 import userIcon from "../Assets/person.png";
 import userEmail from "../Assets/email.png";
 import userPassword from "../Assets/password.png";
-const LoginSignup = () => {
+const DashBoard = () => {
   const [action, setAction] = useState("Sign Up");
   const [name, setName] = useState(null);
   const [email, setEmail] = useState(null);
@@ -102,26 +102,7 @@ const LoginSignup = () => {
         console.log(error);
         setErrMessage(error?.data?.message);
       })
-    // let getUserData = JSON.parse(localStorage.getItem("User"));
-    // getUserData?.map((e) => {
-    //   console.log("Inisde Map");
-    //   if (e?.email === email) {
-    //     if (e?.email === email && e?.password === password) {
-    //       let userData = [{ name: e.name, email: email, password: password }];
-    //       localStorage.setItem("LoginUser", JSON.stringify(userData));
-    //       setSuccessMessage("Congratulations, you have successfully Login");
-    //       setTimeout(() => {
-    //         setAction("Login");
-    //         setErrMessage(null);
-    //         setSuccessMessage(null);
-    //       }, 2000);
-    //     } else {
-    //       setErrMessage("Email and pasword doest not match");
-    //     }
-    //   } else {
-    //     setErrMessage("No Email Found please register first");
-    //   }
-    // });
+  
   };
   //This API Is for LOGIN for now i am commenting it...
 
@@ -220,4 +201,4 @@ const LoginSignup = () => {
   );
 };
 
-export default LoginSignup;
+export default DashBoard;
