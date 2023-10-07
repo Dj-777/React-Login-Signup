@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "./LoginSignup.css";
 import userIcon from "../Assets/person.png";
 import userEmail from "../Assets/email.png";
 import userPassword from "../Assets/password.png";
 const LoginSignup = () => {
+  let history = useHistory()
   const [action, setAction] = useState("Sign Up");
   const [name, setName] = useState(null);
   const [email, setEmail] = useState(null);
@@ -12,7 +14,6 @@ const LoginSignup = () => {
   const [confirmPassword, setConfirmPassword] = useState(null);
   let [errMessage, setErrMessage] = useState(null);
   let [successMessage, setSuccessMessage] = useState(null);
-
 
   useEffect(() => {
     console.log(!password, !confirmPassword);
@@ -59,7 +60,7 @@ const LoginSignup = () => {
           }, 5000);
         } else if (res?.data?.status === 0) {
           console.log("Inside elseif");
-           setErrMessage(res?.data?.message);
+          setErrMessage(res?.data?.message);
           setTimeout(() => {
             setErrMessage(null);
             setSuccessMessage(null);
@@ -71,37 +72,38 @@ const LoginSignup = () => {
         setErrMessage(error?.data?.message);
       });
   };
-  
 
   //This API Is for LOGIN for now i am commenting it...
   const handleLoginChange = (email, password) => {
-     
-      email === null ? email = null : email = email 
-      password === null ? password = null : password = password 
-      axios
+    email === null ? (email = null) : (email = email);
+    password === null ? (password = null) : (password = password);
+    axios
       .post("http://localhost:3000/user/userslogin", {
-        data: { email, password},
-      }).then((res)=>{
-        if(res?.data?.status === 0 ){
+        data: { email, password },
+      })
+      .then((res) => {
+        if (res?.data?.status === 0) {
           setErrMessage(res?.data?.message);
           setTimeout(() => {
             setErrMessage(null);
             setSuccessMessage(null);
           }, 5000);
-        }
-        else if(res?.data?.status === 1){
+        } else if (res?.data?.status === 1) {
           setSuccessMessage(res?.data?.message);
           setTimeout(() => {
+            localStorage.setItem('email',JSON.stringify(res?.data?.info?.email));
             setErrMessage(null);
             setSuccessMessage(null);
+            history.push("/dashboard");
           }, 5000);
-        }else{
+        } else {
           console.log("Nothing");
         }
-      }).catch((error)=>{
+      })
+      .catch((error) => {
         console.log(error);
         setErrMessage(error?.data?.message);
-      })
+      });
     // let getUserData = JSON.parse(localStorage.getItem("User"));
     // getUserData?.map((e) => {
     //   console.log("Inisde Map");
@@ -209,7 +211,7 @@ const LoginSignup = () => {
             className={action === "Sign Up" ? "submit gray" : "submit"}
             onClick={() => {
               setAction("Login");
-               handleLoginChange(email, password);
+              handleLoginChange(email, password);
             }}
           >
             Login
